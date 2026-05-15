@@ -1,0 +1,6 @@
+{
+  "name": "MelodyStream",
+  "description": "A modern, sleek music player with local file support, playlist management, and beautiful animations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
