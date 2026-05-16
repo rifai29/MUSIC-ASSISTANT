@@ -20,6 +20,7 @@ export default function AudioPlayer() {
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('none');
   const [isShuffle, setIsShuffle] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -66,6 +67,31 @@ export default function AudioPlayer() {
     setTracks(prev => [...prev, ...newTracks]);
     if (currentTrackIndex === -1) {
       setCurrentTrackIndex(0);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const audioFiles = Array.from(files).filter(file => file.type.startsWith('audio/'));
+      if (audioFiles.length > 0) {
+        const dummyEvent = { target: { files: audioFiles as unknown as FileList } } as React.ChangeEvent<HTMLInputElement>;
+        handleFileUpload(dummyEvent);
+        setIsLibraryOpen(true);
+      }
     }
   };
 
@@ -208,35 +234,59 @@ export default function AudioPlayer() {
           isLibraryOpen ? "md:col-span-12 lg:col-span-7" : "md:col-span-12"
         )}>
           <AnimatePresence mode="wait">
-            <motion.div 
-              key={currentTrack?.id || 'empty'}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              className="relative w-full max-w-[500px] aspect-square"
-            >
-              <div className="absolute inset-0 bg-[#D9D9D0] rounded-[48px] shadow-2xl overflow-hidden ring-1 ring-black/5">
-                {/* Decorative Pattern / Placeholder Art */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#5A5A40]/30 to-[#A3A380]/30 mix-blend-multiply" />
-                <img 
-                  src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop"
-                  alt="Organic Echoes" 
-                  className="w-full h-full object-cover opacity-80"
-                />
-                
-                {/* Text Overlay */}
-                <div className="absolute bottom-10 left-10 right-10 text-white z-10">
-                  <p className="text-[10px] uppercase tracking-[0.3em] opacity-80 font-bold mb-2">Track {currentTrackIndex + 1} of {tracks.length}</p>
-                  <h1 className="font-serif text-5xl font-light mb-3 leading-tight drop-shadow-md">
-                    {currentTrack?.title || "Quiet Forest"}
-                  </h1>
-                  <p className="text-xl opacity-90 italic font-serif">
-                    {currentTrack?.artist || "Nature Whisperer"} — {currentTrack?.album || "Organic Echoes"}
+            {tracks.length > 0 ? (
+              <motion.div 
+                key={currentTrack?.id || 'empty'}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="relative w-full max-w-[500px] aspect-square"
+              >
+                <div className="absolute inset-0 bg-[#D9D9D0] rounded-[48px] shadow-2xl overflow-hidden ring-1 ring-black/5">
+                  {/* Decorative Pattern / Placeholder Art */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#5A5A40]/30 to-[#A3A380]/30 mix-blend-multiply" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop"
+                    alt="Organic Echoes" 
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                  
+                  {/* Text Overlay */}
+                  <div className="absolute bottom-10 left-10 right-10 text-white z-10">
+                    <p className="text-[10px] uppercase tracking-[0.3em] opacity-80 font-bold mb-2">Track {currentTrackIndex + 1} of {tracks.length}</p>
+                    <h1 className="font-serif text-5xl font-light mb-3 leading-tight drop-shadow-md">
+                      {currentTrack?.title || "Quiet Forest"}
+                    </h1>
+                    <p className="text-xl opacity-90 italic font-serif">
+                      {currentTrack?.artist || "Nature Whisperer"} — {currentTrack?.album || "Organic Echoes"}
+                    </p>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center text-center space-y-6"
+              >
+                <div className="w-32 h-32 bg-[#5A5A40]/10 rounded-full flex items-center justify-center text-[#5A5A40]">
+                  <Music size={64} strokeWidth={1} />
+                </div>
+                <div>
+                  <h2 className="font-serif text-3xl mb-2">Belum ada musik</h2>
+                  <p className="text-[#8E8E82] max-w-xs mx-auto">
+                    Masukkan musik hasil download Anda untuk mulai mendengarkan secara offline.
                   </p>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              </div>
-            </motion.div>
+                <button 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-8 py-3 bg-[#5A5A40] text-white rounded-full font-bold shadow-lg hover:bg-[#484832] transition-colors"
+                >
+                  Pilih File Musik
+                </button>
+              </motion.div>
+            )}
           </AnimatePresence>
         </section>
 
@@ -247,10 +297,16 @@ export default function AudioPlayer() {
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 50, opacity: 0 }}
-              className="md:col-span-12 lg:col-span-5 flex flex-col bg-white/40 rounded-[40px] border border-[#D1D1CB] p-8 shadow-sm backdrop-blur-md overflow-hidden"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={cn(
+                "md:col-span-12 lg:col-span-5 flex flex-col bg-white/40 rounded-[40px] border p-8 shadow-sm backdrop-blur-md overflow-hidden transition-all",
+                isDragging ? "border-[#5A5A40] bg-[#5A5A40]/5 scale-[0.99]" : "border-[#D1D1CB]"
+              )}
             >
               <div className="flex justify-between items-end mb-8">
-                <h2 className="font-serif text-3xl text-[#2C2C24]">Up Next</h2>
+                <h2 className="font-serif text-3xl text-[#2C2C24]">Daftar Putar</h2>
                 <div className="flex items-center gap-4">
                   <button 
                     onClick={() => fileInputRef.current?.click()}
