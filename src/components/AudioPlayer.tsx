@@ -203,7 +203,7 @@ export default function AudioPlayer() {
           <div className="w-10 h-10 bg-[#5A5A40] rounded-full flex items-center justify-center shadow-lg shadow-[#5A5A40]/20">
             <Music className="w-5 h-5 text-white" />
           </div>
-          <span className="font-serif text-2xl font-semibold tracking-tight">Sylvan Audio</span>
+          <span className="font-serif text-2xl font-semibold tracking-tight">Musik Assistant</span>
         </div>
         <nav className="hidden md:flex gap-8 text-xs font-medium uppercase tracking-widest text-[#8E8E82]">
           <button 
