@@ -360,27 +360,65 @@ export default function AudioPlayer() {
 
       {/* Main Glass Application Container */}
       <div className={cn(
-        "relative w-full max-w-5xl flex-1 flex flex-col bg-white/70 backdrop-blur-xl border rounded-[40px] shadow-2xl overflow-hidden transition-all duration-300 z-10",
-        isDragging ? "border-[#5A5A40] bg-[#5A5A40]/5 scale-[0.99]" : "border-[#D1D1CB]"
+        "relative w-full max-w-5xl flex-1 flex flex-col bg-white-70 backdrop-blur-xl border border-[#D1D1CB] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 z-10",
+        isDragging ? "bg-[#5A5A40]/5 scale-[0.99]" : ""
       )}>
         {/* Top bar */}
-        <header className="p-6 border-b border-[#D1D1CB]/50 flex items-center justify-between shrink-0">
+        <header className="p-5 border-b border-[#D1D1CB]/50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#5A5A40] rounded-2xl flex items-center justify-center shadow-lg shadow-[#5A5A40]/20">
+            <div className="w-9 h-9 bg-[#5A5A40] rounded-xl flex items-center justify-center shadow-md shadow-[#5A5A40]/10">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-serif text-xl font-bold tracking-tight whitespace-nowrap block">Musik Assistant</span>
+              <span className="font-serif text-lg font-bold tracking-tight whitespace-nowrap block">Musik Assistant</span>
               <span className="text-[10px] tracking-widest text-[#8E8E82] uppercase font-bold">Nature Studio Suite</span>
             </div>
           </div>
 
           {/* Connected Device Info */}
-          <div className="hidden sm:flex items-center gap-2 bg-[#5A5A40]/10 border border-[#5A5A40]/20 rounded-full py-1.5 px-4">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase text-[#5A5A40] tracking-wide">Studio Hi-Fi Aktif</span>
+          <div className="hidden sm:flex items-center gap-2 bg-[#5A5A40]/10 border border-[#5A5A40]/20 rounded-full py-1 px-3">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold uppercase text-[#5A5A40] tracking-wide">Studio Hi-Fi Aktif</span>
           </div>
         </header>
+
+        {/* Integrated Navigation Tabs under Header */}
+        <div className="px-6 py-2 border-b border-[#D1D1CB]/40 bg-[#EBEBE4]/30 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+            {[
+              { id: 'library', label: 'Library', icon: Music },
+              { id: 'browse', label: 'Browse', icon: Compass },
+              { id: 'assistant', label: 'Assistant', icon: Sparkles },
+              { id: 'history', label: 'History', icon: History },
+              { id: 'more', label: 'More', icon: Sliders },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={cn(
+                    "flex items-center gap-1.5 py-1.5 px-3.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap",
+                    isActive 
+                      ? "bg-[#5A5A40] text-white shadow-sm" 
+                      : "text-[#8E8E82] hover:text-[#5A5A40] hover:bg-[#5A5A40]/5"
+                  )}
+                >
+                  <Icon size={14} className={isActive ? "text-white" : "text-[#8E8E82]"} />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            className="py-1.5 px-3 bg-[#5A5A40] text-white hover:bg-[#4d4d36] transition-all rounded-lg text-xs font-bold flex items-center gap-1 shadow"
+          >
+            <Plus size={14} /> Add Music
+          </button>
+        </div>
 
         {/* Content View Space */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
@@ -396,19 +434,9 @@ export default function AudioPlayer() {
                   exit={{ opacity: 0, y: -15 }}
                   className="flex-1 flex flex-col overflow-hidden"
                 >
-                  <div className="flex justify-between items-center mb-6 shrink-0">
-                    <div>
-                      <h2 className="font-serif text-2xl font-bold">Koleksi Lokal</h2>
-                      <p className="text-xs text-[#8E8E82]">Koleksi album dan musik yang telah Anda masukkan.</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button 
-                        onClick={() => fileInputRef.current?.click()}
-                        className="py-2 px-4 bg-[#5A5A40] text-white hover:bg-[#4d4d36] transition-all rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#5A5A40]/10"
-                      >
-                        <Plus size={14} /> Add Music
-                      </button>
-                    </div>
+                  <div className="mb-4 shrink-0">
+                    <h2 className="font-serif text-2xl font-bold">Koleksi Lokal</h2>
+                    <p className="text-xs text-[#8E8E82]">Koleksi album dan musik yang telah Anda masukkan.</p>
                   </div>
 
                   {/* Search Bar inside Library */}
@@ -419,7 +447,7 @@ export default function AudioPlayer() {
                       placeholder="Cari lagu berdasarkan judul atau artis..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-[#EBEBE4]/50 border border-[#D1D1CB] rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-[#5A5A40] transition-all"
+                      className="w-full bg-[#EBEBE4]/50 border border-[#D1D1CB] rounded-xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-[#5A5A40] transition-all"
                     />
                   </div>
 
@@ -437,14 +465,14 @@ export default function AudioPlayer() {
                             setStatus('playing');
                           }}
                           className={cn(
-                            "group flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all border",
+                            "group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all border",
                             isActive 
                               ? "bg-white border-[#5A5A40] shadow-md shadow-[#5A5A40]/5" 
                               : "bg-white/40 border-[#D1D1CB]/40 hover:bg-white/80 hover:border-[#D1D1CB]"
                           )}
                         >
                           <div className={cn(
-                            "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                            "w-12 h-12 rounded-lg flex items-center justify-center shrink-0 transition-colors",
                             isActive ? "bg-[#5A5A40] text-white" : "bg-[#D9D9D0] text-[#5A5A40]"
                           )}>
                             {isActive && status === 'playing' ? (
@@ -513,7 +541,7 @@ export default function AudioPlayer() {
                   </div>
 
                   {/* Curator Card */}
-                  <div className="bg-gradient-to-r from-[#5A5A40] to-[#A3A380] text-white p-6 rounded-3xl mb-6 shadow-xl relative overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#5A5A40] to-[#A3A380] text-white p-6 rounded-2xl mb-6 shadow-xl relative overflow-hidden">
                     <div className="absolute right-[-20px] bottom-[-20px] opacity-10">
                       <Compass size={160} />
                     </div>
@@ -530,7 +558,7 @@ export default function AudioPlayer() {
                       return (
                         <div 
                           key={track.id}
-                          className="bg-white/40 border border-[#D1D1CB]/40 rounded-2xl p-4 flex items-center justify-between"
+                          className="bg-white/40 border border-[#D1D1CB]/40 rounded-xl p-4 flex items-center justify-between"
                         >
                           <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-xl bg-[#5A5A40]/10 flex items-center justify-center text-[#5A5A40]">
@@ -567,7 +595,7 @@ export default function AudioPlayer() {
                                 }
                               }}
                               className={cn(
-                                "py-2 px-3 text-xs font-bold rounded-xl transition-all",
+                                "py-2 px-3 text-xs font-bold rounded-lg transition-all",
                                 isAdded 
                                   ? "bg-transparent text-emerald-600 flex items-center gap-1"
                                   : "bg-[#5A5A40]/10 text-[#5A5A40] hover:bg-[#5A5A40]/20"
@@ -621,7 +649,7 @@ export default function AudioPlayer() {
                   </div>
 
                   {/* Messaging Logs */}
-                  <div className="flex-1 bg-white/50 border border-[#D1D1CB]/50 rounded-[24px] p-4 overflow-y-auto custom-scrollbar space-y-4 mb-4">
+                  <div className="flex-1 bg-white/50 border border-[#D1D1CB]/50 rounded-xl p-4 overflow-y-auto custom-scrollbar space-y-4 mb-4">
                     {chatMessages.map((msg) => (
                       <div 
                         key={msg.id}
@@ -631,7 +659,7 @@ export default function AudioPlayer() {
                         )}
                       >
                         <div className={cn(
-                          "p-3.5 rounded-[20px] text-sm leading-relaxed",
+                          "p-3.5 rounded-xl text-sm leading-relaxed",
                           msg.sender === 'user' 
                             ? "bg-[#5A5A40] text-white rounded-tr-none" 
                             : "bg-[#EBEBE4] text-[#2C2C24] rounded-tl-none border border-[#D1D1CB]"
@@ -682,11 +710,11 @@ export default function AudioPlayer() {
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className="w-full bg-[#EBEBE4]/50 border border-[#D1D1CB] rounded-2xl py-3.5 pl-4 pr-12 text-sm focus:outline-none focus:border-[#5A5A40] transition-all"
+                      className="w-full bg-[#EBEBE4]/50 border border-[#D1D1CB] rounded-xl py-3.5 pl-4 pr-12 text-sm focus:outline-none focus:border-[#5A5A40] transition-all"
                     />
                     <button 
                       onClick={() => handleSendMessage()}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 bg-[#5A5A40] text-white hover:bg-[#484832] transition-colors rounded-xl shadow-md"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 bg-[#5A5A40] text-white hover:bg-[#484832] transition-colors rounded-lg shadow-md"
                     >
                       <Send size={14} />
                     </button>
@@ -721,7 +749,7 @@ export default function AudioPlayer() {
                     {playHistory.map((entry, idx) => (
                       <div 
                         key={idx}
-                        className="bg-white/40 border border-[#D1D1CB]/30 rounded-2xl p-4 flex items-center justify-between hover:bg-white/70 transition-all cursor-pointer"
+                        className="bg-white/40 border border-[#D1D1CB]/30 rounded-xl p-4 flex items-center justify-between hover:bg-white/70 transition-all cursor-pointer"
                         onClick={() => {
                           const matchedIdx = tracks.findIndex(t => t.id === entry.track.id);
                           if (matchedIdx !== -1) {
@@ -775,7 +803,7 @@ export default function AudioPlayer() {
                   <div className="space-y-6 overflow-y-auto custom-scrollbar flex-1 pr-1">
                     
                     {/* Visualizer Preferences */}
-                    <div className="bg-white/40 border border-[#D1D1CB]/50 p-5 rounded-3xl">
+                    <div className="bg-white/40 border border-[#D1D1CB]/50 p-5 rounded-xl">
                       <h3 className="font-serif text-lg font-semibold mb-3 flex items-center gap-2">
                         <Sliders size={18} className="text-[#5A5A40]" /> Visualisasi Audio
                       </h3>
@@ -787,7 +815,7 @@ export default function AudioPlayer() {
                             key={style}
                             onClick={() => setAudioVisualizer(style)}
                             className={cn(
-                              "py-3 px-4 rounded-xl text-xs font-bold capitalize transition-all border",
+                              "py-3 px-4 rounded-lg text-xs font-bold capitalize transition-all border",
                               audioVisualizer === style 
                                 ? "bg-[#5A5A40] text-white border-[#5A5A40] shadow-sm"
                                 : "bg-white border-[#D1D1CB] text-[#2C2C24] hover:bg-white/80"
@@ -818,7 +846,7 @@ export default function AudioPlayer() {
                     </div>
 
                     {/* About Widget */}
-                    <div className="bg-white/40 border border-[#D1D1CB]/50 p-5 rounded-3xl space-y-3">
+                    <div className="bg-white/40 border border-[#D1D1CB]/50 p-5 rounded-xl space-y-3">
                       <h3 className="font-serif text-lg font-semibold text-[#2C2C24]">Tentang Musik Assistant</h3>
                       <p className="text-xs leading-relaxed text-[#2C2C24]/80">
                         Aplikasi pemutar musik web terintegrasi asisten AI cerdas berbasis Google Gemini. 
@@ -1025,79 +1053,6 @@ export default function AudioPlayer() {
           </div>
 
         </footer>
-      </div>
-
-      {/* Floating Action Buttons & Bottom Navigation Bar Container mimicking Mobile layout */}
-      <div className="relative w-full max-w-sm shrink-0 z-20 mt-4">
-        
-        {/* Floating Action Button '+' inside mobile wrapper as requested */}
-        <button 
-          onClick={() => fileInputRef.current?.click()}
-          className="absolute right-6 -top-12 w-12 h-12 bg-indigo-600 text-white hover:bg-indigo-700 transition-all rounded-[14px] flex items-center justify-center shadow-xl shadow-indigo-600/30 hover:scale-105 active:scale-95"
-          title="Unggah Musik"
-        >
-          <Plus size={22} className="stroke-[2.5]" />
-        </button>
-
-        {/* Bottom Tab Bar matching mockup */}
-        <div className="w-full bg-white border border-[#D1D1CB] rounded-2xl shadow-xl py-3 px-1 flex items-center justify-around">
-          
-          <button 
-            onClick={() => setActiveTab('library')}
-            className={cn(
-              "flex flex-col items-center gap-1.5 transition-all w-16",
-              activeTab === 'library' ? "text-indigo-600 font-bold scale-105" : "text-[#8E8E82]"
-            )}
-          >
-            <Music size={18} className={cn(activeTab === 'library' ? "text-indigo-600 shrink-0" : "shrink-0")} />
-            <span className="text-[10px] tracking-wider uppercase">Library</span>
-          </button>
-
-          <button 
-            onClick={() => setActiveTab('browse')}
-            className={cn(
-              "flex flex-col items-center gap-1.5 transition-all w-16",
-              activeTab === 'browse' ? "text-indigo-600 font-bold scale-105" : "text-[#8E8E82]"
-            )}
-          >
-            <Compass size={18} className={cn(activeTab === 'browse' ? "text-indigo-600 shrink-0" : "shrink-0")} />
-            <span className="text-[10px] tracking-wider uppercase">Browse</span>
-          </button>
-
-          <button 
-            onClick={() => setActiveTab('assistant')}
-            className={cn(
-              "flex flex-col items-center gap-1.5 transition-all w-16",
-              activeTab === 'assistant' ? "text-indigo-600 font-bold scale-105" : "text-[#8E8E82]"
-            )}
-          >
-            <Sparkles size={18} className={cn(activeTab === 'assistant' ? "text-indigo-600 shrink-0" : "shrink-0")} />
-            <span className="text-[10px] tracking-wider uppercase">Assistant</span>
-          </button>
-
-          <button 
-            onClick={() => setActiveTab('history')}
-            className={cn(
-              "flex flex-col items-center gap-1.5 transition-all w-16",
-              activeTab === 'history' ? "text-indigo-600 font-bold scale-105" : "text-[#8E8E82]"
-            )}
-          >
-            <History size={18} className={cn(activeTab === 'history' ? "text-indigo-600 shrink-0" : "shrink-0")} />
-            <span className="text-[10px] tracking-wider uppercase">History</span>
-          </button>
-
-          <button 
-            onClick={() => setActiveTab('more')}
-            className={cn(
-              "flex flex-col items-center gap-1.5 transition-all w-16",
-              activeTab === 'more' ? "text-indigo-600 font-bold scale-105" : "text-[#8E8E82]"
-            )}
-          >
-            <Sliders size={18} className={cn(activeTab === 'more' ? "text-indigo-600 shrink-0" : "shrink-0")} />
-            <span className="text-[10px] tracking-wider uppercase">More</span>
-          </button>
-
-        </div>
       </div>
     </div>
   );
