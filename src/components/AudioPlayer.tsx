@@ -360,11 +360,11 @@ export default function AudioPlayer() {
 
       {/* Main Glass Application Container */}
       <div className={cn(
-        "relative w-full max-w-5xl flex-1 flex flex-col bg-white-70 backdrop-blur-xl border border-[#D1D1CB] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 z-10",
+        "relative w-full max-w-7xl xl:max-w-[1400px] flex-1 flex flex-col bg-white/70 backdrop-blur-xl border border-[#D1D1CB] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 z-10",
         isDragging ? "bg-[#5A5A40]/5 scale-[0.99]" : ""
       )}>
         {/* Top bar */}
-        <header className="p-5 border-b border-[#D1D1CB]/50 flex items-center justify-between shrink-0">
+        <header className="p-5 md:px-8 border-b border-[#D1D1CB]/50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[#5A5A40] rounded-xl flex items-center justify-center shadow-md shadow-[#5A5A40]/10">
               <Sparkles className="w-5 h-5 text-white" />
@@ -383,7 +383,7 @@ export default function AudioPlayer() {
         </header>
 
         {/* Integrated Navigation Tabs under Header */}
-        <div className="px-6 py-2 border-b border-[#D1D1CB]/40 bg-[#EBEBE4]/30 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="px-5 md:px-8 py-3 border-b border-[#D1D1CB]/40 bg-[#EBEBE4]/30 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
             {[
               { id: 'library', label: 'Library', icon: Music },
@@ -424,7 +424,7 @@ export default function AudioPlayer() {
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           
           {/* Active Tab Screen Area */}
-          <div className="flex-1 flex flex-col overflow-hidden p-6">
+          <div className="flex-1 flex flex-col overflow-hidden p-6 md:p-8">
             <AnimatePresence mode="wait">
               {activeTab === 'library' && (
                 <motion.div 
@@ -869,7 +869,7 @@ export default function AudioPlayer() {
           </div>
 
           {/* Right Panel: Beautiful Vinyl/Art Canvas (Desktop only) */}
-          <div className="hidden lg:flex w-96 border-l border-[#D1D1CB]/50 flex-col items-center justify-center p-8 bg-[#EBEBE4]/20">
+          <div className="hidden lg:flex w-96 xl:w-[420px] border-l border-[#D1D1CB]/50 flex-col items-center justify-center p-8 xl:p-12 bg-[#EBEBE4]/20">
             <AnimatePresence mode="wait">
               {currentTrack ? (
                 <motion.div 
@@ -890,7 +890,7 @@ export default function AudioPlayer() {
                         duration: 12 / waveSpeed, 
                         ease: 'linear' 
                       }}
-                      className="relative w-64 h-64 rounded-full bg-[#1A1A1A] p-2 flex items-center justify-center shadow-2xl border-4 border-white"
+                      className="relative w-64 h-64 xl:w-72 xl:h-72 rounded-full bg-[#1A1A1A] p-2 flex items-center justify-center shadow-2xl border-4 border-white"
                     >
                       {/* Grooves */}
                       <div className="absolute inset-4 rounded-full border border-white/5 pointer-events-none" />
@@ -899,7 +899,7 @@ export default function AudioPlayer() {
                       <div className="absolute inset-16 rounded-full border border-white/5 pointer-events-none" />
 
                       {/* Cover circle inside record */}
-                      <div className="w-28 h-28 rounded-full overflow-hidden relative border-2 border-dashed border-white/10 flex items-center justify-center bg-[#5A5A40]">
+                      <div className="w-28 h-28 xl:w-32 xl:h-32 rounded-full overflow-hidden relative border-2 border-dashed border-white/10 flex items-center justify-center bg-[#5A5A40]">
                         <img 
                           src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop"
                           alt="Cover art" 
