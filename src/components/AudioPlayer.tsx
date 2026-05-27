@@ -4,7 +4,7 @@ import {
   Play, Pause, SkipForward, SkipBack, 
   Volume2, VolumeX, Repeat, Shuffle, 
   List, Music, Plus, Trash2, Heart,
-  MoreVertical, Search, X, Sparkles,
+  MoreVertical, Search, X, Sparkles, LayoutGrid,
   History, Sliders, Compass, Send, Check
 } from 'lucide-react';
 import { Track, PlaybackStatus, RepeatMode } from '../types';
@@ -367,7 +367,7 @@ export default function AudioPlayer() {
         <header className="p-5 md:px-8 border-b border-[#D1D1CB]/50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[#5A5A40] rounded-xl flex items-center justify-center shadow-md shadow-[#5A5A40]/10">
-              <Sparkles className="w-5 h-5 text-white" />
+              <LayoutGrid className="w-5 h-5 text-white" />
             </div>
             <div>
               <span className="font-serif text-lg font-bold tracking-tight whitespace-nowrap block">Musik Assistant</span>
